@@ -1,7 +1,7 @@
 init:
     storage: !service
         name: storage
-        instance: !include 
+        instance: !include
             path: ../../wfcommon/config/storage.yaml
     accu_3h: !service
         name: accu_3h
@@ -49,6 +49,11 @@ init:
 renderer: !multi
     parallel: true
     children:
+        housekeeper: !scheduler
+            period: 1200
+            delay: 1200
+            renderer: !housekeeper
+                docroot: /var/lib/wfrog/cache
         ## Uncomment to activate PWS Weather for you publisher
         #pwsweather: !pwsweather
         #    id: STATION_ID
@@ -56,7 +61,7 @@ renderer: !multi
         #    storage: !service
         #        name: storage
         #    period: 300
-        
+
         ## Uncomment to activate Wetter.com publisher
         # SetUp: http://www.wetter.com/community/wetternetzwerk/admin/api/
         # Please use for first setup test: True to test publishing. Check logs!
@@ -101,7 +106,7 @@ renderer: !multi
         #    period: 600  # in seconds
         #    delay: 60 # in seconds, delay before start rendering
         #    renderer: !ftp
-        #        host: HOST.COM 
+        #        host: HOST.COM
         #        username: USERNAME
         #        password: PASSWORD
         #        directory: DIRECTORY
@@ -126,7 +131,7 @@ renderer: !multi
         #            #meteoclimatic.txt: !file
         #            #    path: /tmp/meteoclimatic.txt
         #            #    renderer: !meteoclimatic
-        #            #        id: STATION_ID  
+        #            #        id: STATION_ID
         #            #        storage: !service
         #            #            name: storage
 
@@ -148,7 +153,8 @@ renderer: !multi
                     path: default/365days.yaml
                 check: !include
                     path: default/check.yaml
-                
+            docroot: /var/lib/wfrog/cache
+
                 ## Uncomment to activate sticker (beta version)
                 #sticker.png: !sticker
                 #    station_name: YOUR STATION NAME
@@ -157,7 +163,7 @@ renderer: !multi
 
                 ## Uncomment to activate www.meteoclimatic.com http publisher
                 #meteoclimatic.txt: !meteoclimatic
-                #    id: STATION_ID 
+                #    id: STATION_ID
                 #    storage: !service
                 #        name: storage
 
@@ -184,4 +190,3 @@ logging:
     #    #    level: critical
     #    #    handler: !include
     #    #        path: ../../wfcommon/config/mailloghandler.yaml
-
